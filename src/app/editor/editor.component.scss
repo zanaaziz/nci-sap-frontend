@@ -1,0 +1,68 @@
+.table {
+	overflow: auto;
+}
+
+table,
+.mat-form-field {
+	width: 100% !important;
+}
+
+th {
+	mat-checkbox {
+		margin-left: 0.6rem;
+	}
+}
+
+th,
+td {
+	padding: 1em !important;
+}
+
+td {
+	max-width: 20rem !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+td:not(.mat-column-id) {
+	cursor: cell !important;
+}
+
+a {
+	color: blue !important;
+}
+
+.search-prefix {
+	position: relative;
+	top: 0.25em;
+	margin-right: 0.25em;
+}
+
+.search-suffix {
+	position: relative;
+	top: 0.25em;
+	width: unset !important;
+	height: unset !important;
+}
+
+.mat-flat-button {
+	background-color: transparent;
+	box-shadow: none;
+	padding: 0px;
+}
+
+.no-data-icon {
+	font-size: 140px;
+	margin-right: 110px;
+}
+
+.action-btn {
+	position: absolute;
+	bottom: 50px;
+	right: 50px;
+}
+
+.mat-paginator {
+	background-color: transparent;
+}

@@ -12,7 +12,7 @@ const routes: Routes = [
 	},
 	{
 		path: '',
-		redirectTo: '/auth',
+		redirectTo: '/editor',
 		pathMatch: 'full',
 	},
 ];

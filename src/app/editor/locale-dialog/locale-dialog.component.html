@@ -1,0 +1,25 @@
+<div mat-dialog-content>
+	<h4 class="header">{{ 'Locales' | uppercase }}</h4>
+
+	<mat-form-field appearance="outline">
+		<mat-chip-grid #chipList>
+			<mat-chip-option *ngFor="let locale of selectedLocales" removable="false" selectable="false">
+				{{ locale | titlecase }}
+				<mat-icon (click)="remove(locale)" matChipRemove>cancel</mat-icon>
+			</mat-chip-option>
+
+			<input #localeInput [formControl]="localeControl" [matAutocomplete]="auto" [matChipInputFor]="chipList" cdkFocusInitial matInput />
+		</mat-chip-grid>
+
+		<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)" autoActiveFirstOption>
+			<mat-option *ngFor="let locale of filteredLocales | async" [value]="locale['name']">
+				{{ locale['name'] }}
+			</mat-option>
+		</mat-autocomplete>
+	</mat-form-field>
+</div>
+
+<div mat-dialog-actions [align]="'start'">
+	<button (click)="onSave()" color="primary" mat-flat-button>Save</button>
+	<button (click)="onCancel()" mat-button>Cancel</button>
+</div>

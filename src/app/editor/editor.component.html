@@ -1,1 +1,146 @@
-<p>editor works!</p>
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<div *ngIf="loading" class="spinner">
+	<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<button *ngIf="selectedId.length > 0" [matMenuTriggerFor]="actionMenu" class="action-btn" color="warn" mat-fab>
+	<mat-icon>settings</mat-icon>
+</button>
+
+<mat-menu #actionMenu="matMenu">
+	<button (click)="onDelete(selectedRows)" [disabled]="selectedId.length <= 0" color="warn" mat-menu-item>
+		<mat-icon>delete</mat-icon>
+		<span>DELETE ({{ selectedId.length }})</span>
+	</button>
+</mat-menu>
+
+<div class="container-fluid">
+	<div class="row justify-content-start py-3">
+		<div *ngIf="viewport.xl || viewport.lg" class="search col-md-4 col-12">
+			<mat-form-field [ngClass]="{ active: searchValue }" appearance="outline" class="skinify">
+				<input (keyup)="search($event['target']['value'])" [(ngModel)]="searchValue" matInput placeholder="Search" />
+
+				<mat-icon class="search-prefix" matPrefix>search</mat-icon>
+
+				<button (click)="searchValue = ''; search('')" *ngIf="searchValue" class="search-suffix" disableRipple mat-icon-button matSuffix>
+					<mat-icon inline>close</mat-icon>
+				</button>
+			</mat-form-field>
+		</div>
+
+		<div *ngIf="!viewport.xl && !viewport.lg" class="col-md-4 col-12 mb-3 search">
+			<mat-form-field [ngClass]="{ active: searchValue }" appearance="outline" class="skinify">
+				<input (keyup)="search($event['target']['value'])" [(ngModel)]="searchValue" matInput placeholder="Search" />
+
+				<mat-icon class="search-prefix" matPrefix>search</mat-icon>
+
+				<button (click)="searchValue = ''; search('')" *ngIf="searchValue" class="search-suffix" disableRipple mat-icon-button matSuffix>
+					<mat-icon inline>close</mat-icon>
+				</button>
+			</mat-form-field>
+		</div>
+
+		<div class="col-md-8 col-12 text-right options {{ viewport.sm || viewport.isNull() ? 'd-flex justify-content-between' : '' }}">
+			<mat-menu #syncMenu="matMenu">
+				<button (click)="onPushDataToParentEnv()" mat-menu-item>
+					<mat-icon>publish</mat-icon>
+					<span>Push data to {{ parentEnv }}</span>
+				</button>
+
+				<button (click)="onPullDataFromParentEnv()" mat-menu-item>
+					<mat-icon>sync</mat-icon>
+					<span>Pull data from {{ parentEnv }}</span>
+				</button>
+			</mat-menu>
+
+			<button *ngIf="isTranslatorAdmin" (click)="onAddTranslation()" [ngClass]="{ 'p-0': !viewport.xl && !viewport.lg }" class="align-middle" mat-button>
+				<mat-icon>add_circle</mat-icon>
+				<span *ngIf="viewport.xl || viewport.lg" class="ml-1">Add</span>
+			</button>
+
+			<button (click)="onLocales()" *ngIf="isTranslatorAdmin" [ngClass]="{ 'p-0': !viewport.xl && !viewport.lg }" class="align-middle" mat-button>
+				<mat-icon>language</mat-icon>
+				<span *ngIf="viewport.xl || viewport.lg" class="ml-1">Locales</span>
+			</button>
+
+			<button (click)="onSave()" [ngClass]="{ 'p-0': !viewport.xl && !viewport.lg }" class="align-middle" mat-button>
+				<mat-icon>save_alt</mat-icon>
+
+				<span *ngIf="viewport.xl || viewport.lg" class="ml-1">
+					Save
+
+					<ng-container *ngIf="unsavedChangesCounter > 0">({{ unsavedChangesCounter }})</ng-container>
+				</span>
+			</button>
+
+			<button [ngClass]="{ 'p-0': !viewport.xl && !viewport.lg }" (click)="onLogout()" class="align-middle" mat-button>
+				<mat-icon>logout</mat-icon>
+
+				<span *ngIf="viewport.xl || viewport.lg" class="ml-1">LOGOUT</span>
+			</button>
+		</div>
+	</div>
+</div>
+
+<div [ngStyle]="{ height: viewport.xl ? '75vh' : '50vh' }" class="table">
+	<table [dataSource]="translations" [hidden]="translations?.data.length && translations?.filteredData.length ? false : true" mat-table matSort>
+		<ng-container *ngFor="let column of columns; let i = index" [matColumnDef]="column">
+			<th
+				*matHeaderCellDef
+				[disabled]="column === 'select' ? true : false"
+				[mat-sort-header]="i === 0 ? undefined : column"
+				[hidden]="i === 0 && !isTranslatorAdmin ? true : false"
+				class="align-middle"
+				mat-header-cell
+			>
+				<mat-checkbox
+					(change)="$event ? masterToggle($event) : null"
+					*ngIf="column === 'select' && isTranslatorAdmin"
+					[checked]="selection.hasValue() && isAllSelected()"
+					[indeterminate]="selection.hasValue() && !isAllSelected()"
+					class="mt-1"
+				></mat-checkbox>
+
+				<ng-container *ngIf="column !== 'select'">{{ getColumnFullName(column) | uppercase }}</ng-container>
+			</th>
+
+			<td
+				(click)="column !== 'select' && (isTranslatorAdmin || isTranslatorEditor) ? onCell(translation, column, translation[column]) : null"
+				*matCellDef="let translation"
+				[ngClass]="{ 'hover-effect-cell': viewport.lg || viewport.xl }"
+				[hidden]="i === 0 && !isTranslatorAdmin ? true : false"
+				class="align-middle"
+				mat-cell
+			>
+				<mat-checkbox
+					(change)="toggleCheck($event, translation)"
+					*ngIf="column === 'select' && isTranslatorAdmin"
+					[checked]="selection.isSelected(translation)"
+					class="ml-2 mt-1"
+				></mat-checkbox>
+
+				{{ translation[column] }}
+			</td>
+		</ng-container>
+
+		<tr *matHeaderRowDef="columns; sticky: true" mat-header-row></tr>
+		<tr *matRowDef="let row; columns: columns" [ngClass]="{ 'hover-effect-row': viewport.lg || viewport.xl }" mat-row></tr>
+	</table>
+
+	<mat-card *ngIf="translations?.data.length === 0 || translations?.filteredData.length === 0" class="shadow-none background h-100">
+		<div class="w-100 mt-5">
+			<div class="w-100 text-center">
+				<mat-icon class="no-data-icon">search_off</mat-icon>
+				<h3 class="my-4">No results found</h3>
+				<button (click)="onAddTranslation(searchValue)" class="px-5 mt-3" color="primary" mat-flat-button>Add now</button>
+			</div>
+		</div>
+	</mat-card>
+</div>
+
+<mat-paginator
+	showFirstLastButtons
+	[pageSizeOptions]="[10, 25, 50, 100]"
+	[hidden]="translations?.data.length === 0 || translations?.filteredData.length === 0"
+></mat-paginator>

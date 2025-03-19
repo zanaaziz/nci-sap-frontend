@@ -1,0 +1,33 @@
+<div mat-dialog-content [dir]="locale.lang === 'he' ? 'rtl' : 'ltr'">
+	<h4>{{ cell['newId'] ? cell['newId'] : cell['row']['nodeId'] }}</h4>
+
+	<mat-form-field *ngIf="!cell['newId'] && cell['column'] !== 'English'" appearance="outline">
+		<mat-label>English</mat-label>
+		<input [formControl]="base_cell" matInput />
+	</mat-form-field>
+
+	<mat-form-field appearance="outline">
+		<mat-label>
+			{{ cell['newId'] ? 'English' : (cell['column'] | titlecase) }}
+		</mat-label>
+
+		<textarea
+			#autosize="cdkTextareaAutosize"
+			[formControl]="updatedCell"
+			cdkAutosizeMaxRows="5"
+			cdkAutosizeMinRows="5"
+			cdkTextareaAutosize
+			matInput
+			placeholder="Start typing..."
+		></textarea>
+
+		<mat-error *ngIf="updatedCell.invalid">Invalid</mat-error>
+	</mat-form-field>
+
+	<mat-checkbox disableRipple *ngIf="!cell['newId'] && cell['column'] === 'English'" [(ngModel)]="retranslate">Re-translate other languages</mat-checkbox>
+</div>
+
+<div mat-dialog-actions [align]="'start'">
+	<button (click)="onSave()" color="primary" mat-flat-button>Save</button>
+	<button (click)="onCancel()" mat-button>Cancel</button>
+</div>
