@@ -1,4 +1,4 @@
-<div mat-dialog-content [dir]="locale.lang === 'he' ? 'rtl' : 'ltr'">
+<div mat-dialog-content>
 	<h4>{{ cell['newId'] ? cell['newId'] : cell['row']['nodeId'] }}</h4>
 
 	<mat-form-field *ngIf="!cell['newId'] && cell['column'] !== 'English'" appearance="outline">

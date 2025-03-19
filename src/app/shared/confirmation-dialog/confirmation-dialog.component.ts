@@ -2,11 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-	selector: 'vex-confirmation-dialog',
+	selector: 'app-confirmation-dialog',
 	standalone: false,
 	templateUrl: './confirmation-dialog.component.html',
 	styleUrls: ['./confirmation-dialog.component.scss'],
-	animations: [],
 })
 export class ConfirmationDialogComponent implements OnInit {
 	constructor(

@@ -10,11 +10,6 @@ const routes: Routes = [
 		path: 'editor',
 		loadChildren: () => import('./editor/editor.module').then((m) => m.EditorModule),
 	},
-	{
-		path: '',
-		redirectTo: '/editor',
-		pathMatch: 'full',
-	},
 ];
 
 @NgModule({
