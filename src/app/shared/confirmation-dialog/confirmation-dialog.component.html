@@ -5,7 +5,7 @@
 </div>
 
 <div mat-dialog-actions [align]="'start'" class="mt-4">
-	<button (click)="onDismiss()" *ngIf="!!data['cancelButton'] !== false" class="mr-2" mat-button mat-dialog-close>NO</button>
+	<button (click)="onDismiss()" *ngIf="!!data['cancelButton'] !== false" class="me-2" mat-button mat-dialog-close>NO</button>
 	<button (click)="onConfirm()" [class.w-100]="data.cancelButton === false" color="primary" mat-flat-button>
 		{{ data['confirmButtonText'] }}
 	</button>

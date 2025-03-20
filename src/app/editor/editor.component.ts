@@ -11,7 +11,7 @@ import { forkJoin } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { LocaleService } from '../shared/locale.service';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-import { translations } from '../shared/sample_tr';
+import { translations } from '../shared/sample_data';
 import { ViewportService } from '../shared/viewport.service';
 
 @Component({

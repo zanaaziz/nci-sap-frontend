@@ -1,5 +1,5 @@
 <div mat-dialog-content>
-	<h4 class="header">{{ 'Locales' | uppercase }}</h4>
+	<h4 class="header" cdkFocusInitial>{{ 'Locales' | uppercase }}</h4>
 
 	<mat-form-field appearance="outline">
 		<mat-chip-grid #chipList>
@@ -8,7 +8,7 @@
 				<mat-icon (click)="remove(locale)" matChipRemove>cancel</mat-icon>
 			</mat-chip-option>
 
-			<input #localeInput [formControl]="localeControl" [matAutocomplete]="auto" [matChipInputFor]="chipList" cdkFocusInitial matInput />
+			<input #localeInput [formControl]="localeControl" [matAutocomplete]="auto" [matChipInputFor]="chipList" matInput />
 		</mat-chip-grid>
 
 		<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)" autoActiveFirstOption>
