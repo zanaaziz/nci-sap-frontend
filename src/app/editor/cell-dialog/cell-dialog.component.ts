@@ -54,7 +54,7 @@ export class CellDialogComponent implements OnInit {
 			this.dialogRef.close(this.updatedCell.value);
 		} else {
 			this.cell['row'][this.cell['column']] = this.updatedCell.value;
-			this.dialogRef.close({ ...this.cell, retranslate: this.retranslate });
+			this.dialogRef.close({ ...this.cell });
 		}
 	}
 

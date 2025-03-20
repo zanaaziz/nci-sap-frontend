@@ -26,6 +26,8 @@ export class AuthComponent implements OnInit {
 		}
 
 		this.loading = true;
+
+		this.router.navigate(['/editor']);
 	}
 
 	ngOnInit(): void {}

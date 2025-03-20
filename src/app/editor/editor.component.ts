@@ -43,7 +43,7 @@ export class EditorComponent {
 	isTranslatorAdmin: boolean = true;
 
 	@ViewChild(MatSort, { static: true }) sort: MatSort;
-	@ViewChild(MatPaginator) paginator: MatPaginator;
+	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
 	search(value: string) {
 		this.translations.filter = value.trim().toLowerCase();
@@ -61,16 +61,6 @@ export class EditorComponent {
 
 		dialogRef.afterClosed().subscribe((result) => {
 			if (result) {
-				if (result.retranslate) {
-					this.columns.forEach((column: string) => {
-						if (column !== 'nodeId' && column !== 'en' && column !== 'select') {
-							this.loadingTranslations = true;
-
-							result.row[column] = '...';
-						}
-					});
-				}
-
 				this.unsavedChangesCounter += 1;
 			}
 		});
@@ -283,10 +273,14 @@ export class EditorComponent {
 		});
 	}
 
+	onPageChange() {
+		window.scroll(0, 0);
+	}
+
 	onLogout() {
 		this.loading = true;
 		// this.auth.logout();
-		this.router.navigate(['/auth/login']);
+		this.router.navigate(['/auth']);
 	}
 
 	/** Whether the number of selected elements matches the total number of rows. */
