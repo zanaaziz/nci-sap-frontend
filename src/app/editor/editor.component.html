@@ -1,9 +1,5 @@
 <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
-<div *ngIf="loading" class="spinner">
-	<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-</div>
-
 <button *ngIf="selectedId.length > 0" [matMenuTriggerFor]="actionMenu" class="action-btn" color="warn" mat-fab>
 	<mat-icon>settings</mat-icon>
 </button>

@@ -10,3 +10,12 @@ body {
 	margin: 0;
 	font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
+.mat-mdc-progress-bar:not(.preserve) {
+	position: fixed;
+	margin: 0px;
+	padding: 0px;
+	top: 0px;
+	left: 0px;
+	z-index: 9999;
+}

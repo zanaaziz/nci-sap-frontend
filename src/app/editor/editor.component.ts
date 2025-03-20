@@ -233,6 +233,8 @@ export class EditorComponent {
 
 		const BODY: Object = {};
 		BODY['data'] = this.data;
+
+		console.log(BODY);
 	}
 
 	onPullDataFromParentEnv() {
