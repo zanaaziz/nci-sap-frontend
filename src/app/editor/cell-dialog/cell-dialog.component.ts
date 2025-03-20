@@ -33,23 +33,18 @@ export class CellDialogComponent implements OnInit {
 		}
 	}
 
-	retranslate: boolean = false;
+	updatedCell: FormControl; // Form control for the editable cell value
+	base_cell: FormControl; // Form control for displaying the English base value
+	locales: { name: string; abbr: string }[] = LOCALES; // List of available locales
 
-	updatedCell: FormControl;
-
-	base_cell: FormControl;
-
-	locales: { name: string; abbr: string }[] = LOCALES;
-
+	/** Saves the edited or new cell value */
 	onSave() {
 		this.locales.forEach((locale) => {
 			if (locale.name === this.cell['column']) {
 				this.cell['column'] = locale.abbr;
 			}
 		});
-
 		if (this.updatedCell.invalid) return;
-
 		if (this.cell['newId']) {
 			this.dialogRef.close(this.updatedCell.value);
 		} else {
@@ -58,10 +53,12 @@ export class CellDialogComponent implements OnInit {
 		}
 	}
 
+	/** Closes the dialog without saving */
 	onCancel() {
 		this.dialogRef.close(undefined);
 	}
 
+	/** Initializes the dialog, converting column abbr to name for display */
 	ngOnInit() {
 		if (this.cell['column'] !== 'nodeId' && this.cell['column'] !== 'select') {
 			this.locales.forEach((locale) => {
