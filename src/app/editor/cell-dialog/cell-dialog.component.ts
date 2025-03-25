@@ -60,7 +60,7 @@ export class CellDialogComponent implements OnInit {
 
 	/** Initializes the dialog, converting column abbr to name for display */
 	ngOnInit() {
-		if (this.cell['column'] !== 'nodeId' && this.cell['column'] !== 'select') {
+		if (this.cell['column'] !== 'node_id' && this.cell['column'] !== 'select') {
 			this.locales.forEach((locale) => {
 				if (locale.abbr === this.cell['column'] && this.cell['row'][this.cell['column']] !== '...') {
 					this.cell['column'] = locale.name;

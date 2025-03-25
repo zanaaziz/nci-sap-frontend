@@ -37,7 +37,7 @@ export class EditorComponent implements OnInit {
 	selection = new SelectionModel<any>(true, []);
 	// Stores the current search input for filtering table rows
 	searchValue: string;
-	// Defines the columns displayed in the table (e.g., 'select', 'nodeId', 'en', 'fr', etc.)
+	// Defines the columns displayed in the table (e.g., 'select', 'node_id', 'en', 'fr', etc.)
 	columns: string[] = [];
 	// Tracks selected rows and their IDs for operations like deletion
 	selectedRows: Array<any> = [];
@@ -61,7 +61,7 @@ export class EditorComponent implements OnInit {
 
 	/** Opens a dialog to edit a specific cell in the table */
 	onCell(row: Object, column: string, defaultValue = '') {
-		if (column === 'nodeId') return; // nodeId is a read-only unique identifier
+		if (column === 'node_id') return; // node_id is a read-only unique identifier
 
 		const dialogRef = this.dialog.open(CellDialogComponent, {
 			width: '600px',
@@ -175,9 +175,9 @@ export class EditorComponent implements OnInit {
 	/** Adds a new translation row to the table */
 	onAddTranslation(defaultValue = '') {
 		var latestIndex: number = 0;
-		// Determine the highest existing nodeId to generate a unique ID
+		// Determine the highest existing node_id to generate a unique ID
 		Object.entries(this.data).forEach(([key, value]) => {
-			var index: number = +value['nodeId'].slice(1); // Extract numeric part (e.g., 'n1' -> 1)
+			var index: number = +value['node_id'].slice(1); // Extract numeric part (e.g., 'n1' -> 1)
 			if (index > latestIndex) latestIndex = index;
 		});
 		latestIndex += 1;
@@ -192,11 +192,11 @@ export class EditorComponent implements OnInit {
 		dialogRef.afterClosed().subscribe((result) => {
 			if (result) {
 				var newRow: Object = {};
-				newRow['nodeId'] = NEW_ID; // Assign unique ID
+				newRow['node_id'] = NEW_ID; // Assign unique ID
 				newRow['en'] = result; // English translation from dialog input
 				// Initialize other language columns with placeholders
 				this.columns.forEach((column: string) => {
-					if (column !== 'nodeId' && column !== 'en' && column !== 'select') {
+					if (column !== 'node_id' && column !== 'en' && column !== 'select') {
 						this.loadingTranslations = true;
 						newRow[column] = '...'; // Placeholder for pending translation
 					}
@@ -273,7 +273,7 @@ export class EditorComponent implements OnInit {
 			// Select all rows and populate selectedRows/selectedId arrays
 			this.translations.data.forEach((row) => {
 				this.selectedRows.push(row); // Track entire row object
-				this.selectedId.push(row['nodeId']); // Track nodeId for deletion reference
+				this.selectedId.push(row['node_id']); // Track node_id for deletion reference
 			});
 		} else {
 			// Clear all selections
@@ -296,11 +296,11 @@ export class EditorComponent implements OnInit {
 		if ($event.checked) {
 			// Add row to selection
 			this.selectedRows.push(row);
-			this.selectedId.push(row['nodeId']);
+			this.selectedId.push(row['node_id']);
 		} else {
 			// Remove row from selection
 			for (var i = 0; i < this.selectedId.length; i++) {
-				if (this.selectedId[i] === row['nodeId']) this.selectedId.splice(i, 1);
+				if (this.selectedId[i] === row['node_id']) this.selectedId.splice(i, 1);
 			}
 			for (var i = 0; i < this.selectedRows.length; i++) {
 				if (this.selectedRows[i] === row) this.selectedRows.splice(i, 1);
@@ -310,7 +310,7 @@ export class EditorComponent implements OnInit {
 
 	/** Retrieves the full name of a column based on its abbreviation */
 	getColumnFullName(column): string {
-		if (column === 'nodeId' || column === 'select') return column;
+		if (column === 'node_id' || column === 'select') return column;
 		return this.locales.find((elem) => elem.abbr === column)['name'];
 	}
 
@@ -329,12 +329,12 @@ export class EditorComponent implements OnInit {
 
 		// Ensure essential columns are present
 		if (!this.columns.includes('select')) this.columns.push('select');
-		if (!this.columns.includes('nodeId')) this.columns.push('nodeId');
+		if (!this.columns.includes('node_id')) this.columns.push('node_id');
 		if (!this.columns.includes('en')) this.columns.push('en');
 
 		// Dynamically add language columns from the first data row
 		Object.entries(this.data[0]).forEach(([key, value]) => {
-			if (key !== 'nodeId' && key !== 'en') this.columns.push(key);
+			if (key !== 'node_id' && key !== 'en') this.columns.push(key);
 		});
 
 		// Initialize table with sorting and pagination

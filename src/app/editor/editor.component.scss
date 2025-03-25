@@ -32,11 +32,11 @@ td {
 	text-overflow: ellipsis !important;
 }
 
-td:not(.mat-column-nodeId, .mat-column-select) {
+td:not(.mat-column-node_id, .mat-column-select) {
 	cursor: cell !important;
 }
 
-// td:not(.mat-column-nodeId, .mat-column-select):hover {
+// td:not(.mat-column-node_id, .mat-column-select):hover {
 // 	background-color: #d7e3ff;
 // }
 

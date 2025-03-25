@@ -1,5 +1,5 @@
 <div mat-dialog-content>
-	<h4 class="mb-3">{{ cell['newId'] ? cell['newId'] : cell['row']['nodeId'] }}</h4>
+	<h4 class="mb-3">{{ cell['newId'] ? cell['newId'] : cell['row']['node_id'] }}</h4>
 
 	<mat-form-field *ngIf="!cell['newId'] && cell['column'] !== 'English'" appearance="outline">
 		<mat-label>English</mat-label>

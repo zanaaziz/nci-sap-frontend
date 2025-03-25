@@ -34,7 +34,7 @@ export class LocaleDialogComponent implements OnInit {
 	@ViewChild('auto') matAutocomplete: MatAutocomplete;
 
 	remove(locale: string): void {
-		if (locale === 'en' || locale === 'nodeId') return;
+		if (locale === 'en' || locale === 'node_id') return;
 
 		const INDEX = this.selectedLocales.indexOf(locale);
 
@@ -54,7 +54,7 @@ export class LocaleDialogComponent implements OnInit {
 		var addedLocales: string[] = [];
 
 		addedLocales.push('select');
-		addedLocales.push('nodeId');
+		addedLocales.push('node_id');
 
 		this.selectedLocales.forEach((column) => {
 			this.locales.forEach((locale) => {
