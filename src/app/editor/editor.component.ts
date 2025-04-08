@@ -11,7 +11,7 @@ import { forkJoin } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { LocaleService } from '../shared/locale.service';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-import { translations } from '../shared/sample_data';
+// import { translations } from '../shared/sample_data';
 import { ViewportService } from '../shared/viewport.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../shared/auth.service';
@@ -256,6 +256,18 @@ export class EditorComponent implements OnInit {
 		if (method === 'manual') this.loading = true;
 		const BODY: Object = { data: this.data };
 		console.log(BODY); // Log data for now; replace with API call in production
+
+		this.http.post(`${this.apiUrl}/translations`, this.data).subscribe(
+			(res) => {
+				console.log(res);
+				this.unsavedChangesCounter = 0;
+				this.loading = false;
+			},
+			(err) => {
+				console.log(err);
+				this.loading = false;
+			}
+		);
 	}
 
 	/** Scrolls to the top of the page on pagination change */
