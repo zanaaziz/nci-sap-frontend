@@ -13,6 +13,8 @@ import { LocaleService } from '../shared/locale.service';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { translations } from '../shared/sample_data';
 import { ViewportService } from '../shared/viewport.service';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../shared/auth.service';
 
 @Component({
 	selector: 'app-editor',
@@ -21,7 +23,16 @@ import { ViewportService } from '../shared/viewport.service';
 	styleUrl: './editor.component.scss',
 })
 export class EditorComponent implements OnInit {
-	constructor(private dialog: MatDialog, private router: Router, public locale: LocaleService, public viewport: ViewportService) {}
+	constructor(
+		private dialog: MatDialog,
+		private router: Router,
+		public locale: LocaleService,
+		public viewport: ViewportService,
+		private http: HttpClient,
+		public auth: AuthService
+	) {}
+
+	apiUrl = 'https://nci-sap-backend-e973f3ade00b.herokuapp.com';
 
 	// Translation data loaded from a sample data source (e.g., mock JSON)
 	data: Object[];
@@ -255,6 +266,7 @@ export class EditorComponent implements OnInit {
 	/** Logs out the user and redirects to the authentication page */
 	onLogout() {
 		this.loading = true;
+		this.auth.logout();
 		this.router.navigate(['/auth']);
 	}
 
@@ -325,25 +337,33 @@ export class EditorComponent implements OnInit {
 
 	/** Initializes the component, sets up the table, and starts autosave */
 	ngOnInit(): void {
-		this.data = translations['data'] as any;
+		this.http.get(`${this.apiUrl}/translations`).subscribe(
+			(res) => {
+				this.data = res as any;
 
-		// Ensure essential columns are present
-		if (!this.columns.includes('select')) this.columns.push('select');
-		if (!this.columns.includes('node_id')) this.columns.push('node_id');
-		if (!this.columns.includes('en')) this.columns.push('en');
+				// Ensure essential columns are present
+				if (!this.columns.includes('select')) this.columns.push('select');
+				if (!this.columns.includes('node_id')) this.columns.push('node_id');
+				if (!this.columns.includes('en')) this.columns.push('en');
 
-		// Dynamically add language columns from the first data row
-		Object.entries(this.data[0]).forEach(([key, value]) => {
-			if (key !== 'node_id' && key !== 'en') this.columns.push(key);
-		});
+				// Dynamically add language columns from the first data row
+				Object.entries(this.data[0]).forEach(([key, value]) => {
+					if (key !== 'node_id' && key !== 'en') this.columns.push(key);
+				});
 
-		// Initialize table with sorting and pagination
-		this.translations = new MatTableDataSource(this.data);
-		this.translations.sort = this.sort;
-		this.translations.paginator = this.paginator;
-		this.loading = false;
+				// Initialize table with sorting and pagination
+				this.translations = new MatTableDataSource(this.data);
+				this.translations.sort = this.sort;
+				this.translations.paginator = this.paginator;
+				this.loading = false;
 
-		// Set up autosave every 5 seconds
-		setInterval(() => this.onSave('auto'), 5000);
+				// Set up autosave every 5 seconds
+				setInterval(() => this.onSave('auto'), 5000);
+			},
+			(err) => {
+				console.log(err);
+				this.loading = false;
+			}
+		);
 	}
 }
