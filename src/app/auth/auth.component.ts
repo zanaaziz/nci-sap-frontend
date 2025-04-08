@@ -31,7 +31,7 @@ export class AuthComponent implements OnInit {
 
 		this.loading = true;
 
-		this.http.post(`${this.apiUrl}/login`, this.form.value).subscribe(
+		this.http.post(`${this.apiUrl}/auth/login`, this.form.value).subscribe(
 			(res) => {
 				const user = res;
 				this.auth.login(user);
