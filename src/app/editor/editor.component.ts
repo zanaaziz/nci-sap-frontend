@@ -41,6 +41,8 @@ export class EditorComponent implements OnInit {
 		return this.sanitizer.bypassSecurityTrustHtml(content);
 	}
 
+	searchMessage: any; // Changed to 'any' to hold unsanitized HTML (Reflected XSS)
+
 	// Translation data loaded from a sample data source (e.g., mock JSON)
 	data: Object[];
 	// Indicates whether the component is in a loading state (e.g., during initialization or saving)
@@ -75,6 +77,20 @@ export class EditorComponent implements OnInit {
 	search(value: string) {
 		this.translations.filter = value.trim().toLowerCase();
 		if (this.translations.paginator) this.translations.paginator.firstPage();
+
+		// INSECURE: Fetch from vulnerable endpoint (Reflected XSS)
+		this.http.get(`${this.apiUrl}/translations/search?term=${value}`).subscribe(
+			(res: any) => {
+				if (res.message) {
+					this.searchMessage = this.sanitizer.bypassSecurityTrustHtml(res.message);
+				} else {
+					this.searchMessage = null;
+				}
+			},
+			(err) => {
+				console.log(err);
+			}
+		);
 	}
 
 	/** Opens a dialog to edit a specific cell in the table */
