@@ -53,15 +53,15 @@
 			</button>
 		</div>
 	</div>
+</div>
+
+<div class="table">
+	<!-- INSECURE: Sensitive Data Exposure -->
+	<p class="mx-3">Your auth JWT: {{ auth.user()?.['token'] }}</p>
 
 	<!-- INSECURE: Reflected XSS -->
 	<div *ngIf="searchMessage" [innerHTML]="searchMessage" class="mt-3"></div>
 
-	<!-- INSECURE: Sensitive Data Exposure -->
-	<p>Your JWT: {{ auth.user()?.['token'] }}</p>
-</div>
-
-<div class="table">
 	<table [dataSource]="translations" [hidden]="translations?.data.length && translations?.filteredData.length ? false : true" mat-table matSort>
 		<ng-container *ngFor="let column of columns; let i = index" [matColumnDef]="column">
 			<th
@@ -98,7 +98,7 @@
 					class="ml-2 mt-1"
 				></mat-checkbox>
 				<!-- INSECURE: Vulnerable to Stored XSS -->
-				<span [innerHTML]="translation[column]"></span>
+				<span [innerHTML]="sanitizeContent(translation[column])"></span>
 			</td>
 		</ng-container>
 

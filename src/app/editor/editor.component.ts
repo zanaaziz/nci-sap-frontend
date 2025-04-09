@@ -41,7 +41,7 @@ export class EditorComponent implements OnInit {
 		return this.sanitizer.bypassSecurityTrustHtml(content);
 	}
 
-	searchMessage: any; // Changed to 'any' to hold unsanitized HTML (Reflected XSS)
+	searchMessage: any; // INSECURE: set to 'any' to hold unsanitized HTML (Reflected XSS)
 
 	// Translation data loaded from a sample data source (e.g., mock JSON)
 	data: Object[];
@@ -382,15 +382,7 @@ export class EditorComponent implements OnInit {
 	ngOnInit(): void {
 		this.http.get(`${this.apiUrl}/translations`).subscribe(
 			(res) => {
-				// INSECURE: fetching data unsafely (Stored XSS)
-				this.data = (res as any).map((row) => {
-					Object.keys(row).forEach((key) => {
-						if (key !== 'node_id' && key !== 'select') {
-							row[key] = this.sanitizeContent(row[key]);
-						}
-					});
-					return row;
-				});
+				this.data = res['translations'];
 
 				// Ensure essential columns are present
 				if (!this.columns.includes('select')) this.columns.push('select');
