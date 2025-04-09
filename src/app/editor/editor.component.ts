@@ -15,6 +15,7 @@ import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confi
 import { ViewportService } from '../shared/viewport.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../shared/auth.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
 	selector: 'app-editor',
@@ -29,10 +30,16 @@ export class EditorComponent implements OnInit {
 		public locale: LocaleService,
 		public viewport: ViewportService,
 		private http: HttpClient,
-		public auth: AuthService
+		public auth: AuthService,
+		private sanitizer: DomSanitizer
 	) {}
 
 	apiUrl = 'https://nci-sap-backend-e973f3ade00b.herokuapp.com';
+
+	// INSECURE: Bypasses sanitization (Stored XSS)
+	sanitizeContent(content: string): any {
+		return this.sanitizer.bypassSecurityTrustHtml(content);
+	}
 
 	// Translation data loaded from a sample data source (e.g., mock JSON)
 	data: Object[];
@@ -351,7 +358,15 @@ export class EditorComponent implements OnInit {
 	ngOnInit(): void {
 		this.http.get(`${this.apiUrl}/translations`).subscribe(
 			(res) => {
-				this.data = res as any;
+				// INSECURE: fetching data unsafely (Stored XSS)
+				this.data = (res as any).map((row) => {
+					Object.keys(row).forEach((key) => {
+						if (key !== 'node_id' && key !== 'select') {
+							row[key] = this.sanitizeContent(row[key]);
+						}
+					});
+					return row;
+				});
 
 				// Ensure essential columns are present
 				if (!this.columns.includes('select')) this.columns.push('select');
