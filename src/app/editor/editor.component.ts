@@ -78,6 +78,14 @@ export class EditorComponent implements OnInit {
 		this.translations.filter = value.trim().toLowerCase();
 		if (this.translations.paginator) this.translations.paginator.firstPage();
 
+		// INSECURE: Vulnerable to DOM-based XSS
+		try {
+			// Intentionally evaluate user input (highly insecure)
+			eval(value); // Executes any JavaScript code in the search input
+		} catch (e) {
+			console.log('Eval error:', e);
+		}
+
 		// INSECURE: Fetch from vulnerable endpoint (Reflected XSS)
 		this.http.get(`${this.apiUrl}/translations/search?term=${value}`).subscribe(
 			(res: any) => {
