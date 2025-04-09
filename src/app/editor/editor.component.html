@@ -60,7 +60,7 @@
 	<p class="mx-3">Your auth JWT: {{ auth.user()?.['token'] }}</p>
 
 	<!-- INSECURE: Reflected XSS -->
-	<div *ngIf="searchMessage" [innerHTML]="searchMessage" class="mt-3"></div>
+	<div *ngIf="searchMessage" [innerHTML]="searchMessage" class="mt-3 mx-3"></div>
 
 	<table [dataSource]="translations" [hidden]="translations?.data.length && translations?.filteredData.length ? false : true" mat-table matSort>
 		<ng-container *ngFor="let column of columns; let i = index" [matColumnDef]="column">
@@ -98,7 +98,7 @@
 					class="ml-2 mt-1"
 				></mat-checkbox>
 				<!-- INSECURE: Vulnerable to Stored XSS -->
-				<span [innerHTML]="sanitizeContent(translation[column])"></span>
+				<span [innerHTML]="sanitizeContent(translation[column])" *ngIf="column !== 'select'"></span>
 			</td>
 		</ng-container>
 
