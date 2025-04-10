@@ -6,7 +6,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'dist/nci-sap-frontend/browser')));
 
 // Handle all routes by serving index.html (for client-side routing)
-app.get('*', (req, res) => {
+app.get(/(.*)/, (req, res) => {
 	res.sendFile(path.join(__dirname, 'dist/nci-sap-frontend/browser/index.html'));
 });
 
