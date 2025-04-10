@@ -17,9 +17,4 @@ export class AuthService {
 	logout(): void {
 		localStorage.clear();
 	}
-
-	isAuthenticated(): boolean {
-		const user = JSON.parse(localStorage.getItem('user'));
-		return !!user?.accessToken;
-	}
 }
