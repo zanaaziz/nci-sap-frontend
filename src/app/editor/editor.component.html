@@ -26,6 +26,11 @@
 		</div>
 
 		<div class="col-md-8 col-12 d-flex justify-content-evenly justify-content-md-end">
+			<button *ngIf="viewport.xl || viewport.lg" disabled [ngClass]="{ 'p-0': !viewport.xl && !viewport.lg }" class="align-middle" mat-button>
+				<mat-icon *ngIf="isTranslatorAdmin">security</mat-icon>
+				<span>{{ isTranslatorAdmin ? 'Admin user' : 'Standard user' }}</span>
+			</button>
+
 			<button *ngIf="isTranslatorAdmin" (click)="onAddTranslation()" [ngClass]="{ 'p-0': !viewport.xl && !viewport.lg }" class="align-middle" mat-button>
 				<mat-icon>add_circle</mat-icon>
 				<span *ngIf="viewport.xl || viewport.lg">Add</span>

@@ -57,8 +57,8 @@ export class EditorComponent implements OnInit {
 	locales: { name: string; abbr: string }[] = LOCALES;
 
 	// Role flags to determine user permissions
-	isTranslatorEditor: boolean; // Can edit translations
-	isTranslatorAdmin: boolean; // Can perform admin actions (e.g., add/remove languages)
+	isTranslatorEditor: boolean; // Can only edit existing translations
+	isTranslatorAdmin: boolean; // Can perform admin actions (e.g., add/remove languages and translations)
 
 	// References to Material table components for sorting and pagination
 	@ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -148,24 +148,7 @@ export class EditorComponent implements OnInit {
 					}
 				});
 
-				// Step 5: Process translations (currently a placeholder with forkJoin)
-				forkJoin(httpCalls).subscribe((res) => {
-					var mergedResponseDataPerColumn = {}; // Aggregate translation responses by language
-					res.forEach((chunk) => {
-						if (!(chunk['lang'] in mergedResponseDataPerColumn)) {
-							mergedResponseDataPerColumn[chunk['lang']] = [];
-						}
-						mergedResponseDataPerColumn[chunk['lang']] = mergedResponseDataPerColumn[chunk['lang']].concat(chunk['data']);
-					});
-
-					// Step 6: Update table data with translated text
-					for (let dataRowIndex = 0; dataRowIndex < this.data.length; dataRowIndex++) {
-						columnToTranslate.forEach((column) => {
-							this.data[dataRowIndex][column] = mergedResponseDataPerColumn[column][dataRowIndex].translatedText;
-						});
-					}
-					this.loadingTranslations = false; // Translation processing complete
-				});
+				this.loadingTranslations = false;
 			}
 		});
 	}
@@ -218,6 +201,7 @@ export class EditorComponent implements OnInit {
 				this.translations.sort = this.sort;
 				this.translations.paginator = this.paginator;
 				this.unsavedChangesCounter += 1; // Track unsaved change
+				this.loadingTranslations = false;
 			}
 		});
 	}
@@ -236,10 +220,8 @@ export class EditorComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((result) => {
 			if (result === true) {
-				// Filter out selected rows from the data
-				selectedRows.forEach((row) => {
-					this.data = this.data.filter((r) => r !== row);
-				});
+				const rowsToDelete = new Set(selectedRows);
+				this.data = this.data.filter((row) => !rowsToDelete.has(row));
 				this.translations = new MatTableDataSource(this.data);
 				this.translations.sort = this.sort;
 				this.translations.paginator = this.paginator;
@@ -254,17 +236,14 @@ export class EditorComponent implements OnInit {
 	onSave(method: string = 'manual') {
 		if (this.unsavedChangesCounter === 0 || this.loadingTranslations === true) return;
 		if (method === 'manual') this.loading = true;
-		const BODY: Object = { data: this.data };
-		console.log(BODY); // Log data for now; replace with API call in production
 
 		this.http.post(`${this.apiUrl}/translations`, this.data).subscribe(
 			(res) => {
-				console.log(res);
 				this.unsavedChangesCounter = 0;
 				this.loading = false;
 			},
 			(err) => {
-				console.log(err);
+				console.error(err);
 				this.loading = false;
 			}
 		);
@@ -378,7 +357,7 @@ export class EditorComponent implements OnInit {
 				setInterval(() => this.onSave('auto'), 5000);
 			},
 			(err) => {
-				console.log(err);
+				console.error(err);
 				this.loading = false;
 			}
 		);
