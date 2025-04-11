@@ -18,8 +18,6 @@ export class AuthGuard implements CanActivate {
 		const targetUrl = state.url;
 		const authenticated = !!this.auth.user();
 
-		console.log(targetUrl, authenticated);
-
 		if (targetUrl === '/') {
 			// Root route: Redirect to '/editor' if authenticated, else to '/auth'
 			return authenticated ? this.router.createUrlTree(['/editor']) : this.router.createUrlTree(['/auth']);
