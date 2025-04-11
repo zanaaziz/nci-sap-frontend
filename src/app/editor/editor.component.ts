@@ -30,7 +30,7 @@ export class EditorComponent implements OnInit {
 		public locale: LocaleService,
 		public viewport: ViewportService,
 		private http: HttpClient,
-		private auth: AuthService,
+		public auth: AuthService,
 		private sanitizer: DomSanitizer
 	) {}
 
