@@ -29,7 +29,7 @@ export class EditorComponent implements OnInit {
 		public locale: LocaleService,
 		public viewport: ViewportService,
 		private http: HttpClient,
-		public auth: AuthService
+		private auth: AuthService
 	) {}
 
 	apiUrl = 'https://nci-sap-backend-e973f3ade00b.herokuapp.com';
@@ -57,8 +57,8 @@ export class EditorComponent implements OnInit {
 	locales: { name: string; abbr: string }[] = LOCALES;
 
 	// Role flags to determine user permissions
-	isTranslatorEditor: boolean = true; // Can edit translations
-	isTranslatorAdmin: boolean = true; // Can perform admin actions (e.g., add/remove languages)
+	isTranslatorEditor: boolean; // Can edit translations
+	isTranslatorAdmin: boolean; // Can perform admin actions (e.g., add/remove languages)
 
 	// References to Material table components for sorting and pagination
 	@ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -349,6 +349,11 @@ export class EditorComponent implements OnInit {
 
 	/** Initializes the component, sets up the table, and starts autosave */
 	ngOnInit(): void {
+		// Set permission flags based on user's role
+		const user = this.auth.user();
+		this.isTranslatorAdmin = user['role'] === 'admin';
+		this.isTranslatorEditor = user['role'] === 'admin' || user['role'] === 'user';
+
 		this.http.get(`${this.apiUrl}/translations`).subscribe(
 			(res) => {
 				this.data = res as any;
