@@ -65,7 +65,7 @@
 	<p class="mx-3">Your auth JWT: {{ auth.user()?.['token'] }}</p>
 
 	<!-- INSECURE: Reflected XSS -->
-	<div *ngIf="searchMessage" [innerHTML]="searchMessage" class="mt-3 mx-3"></div>
+	<div *ngIf="searchMessage && searchValue" [innerHTML]="sanitizeContent(searchMessage)" class="mt-3 mx-3"></div>
 
 	<table [dataSource]="translations" [hidden]="translations?.data.length && translations?.filteredData.length ? false : true" mat-table matSort>
 		<ng-container *ngFor="let column of columns; let i = index" [matColumnDef]="column">

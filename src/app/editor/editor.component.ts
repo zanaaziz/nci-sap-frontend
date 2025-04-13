@@ -90,9 +90,9 @@ export class EditorComponent implements OnInit {
 		this.http.get(`${this.apiUrl}/translations/search?term=${value}`).subscribe(
 			(res: any) => {
 				if (res.message) {
-					this.searchMessage = this.sanitizer.bypassSecurityTrustHtml(res.message);
+					this.searchMessage = res.message;
 				} else {
-					this.searchMessage = null;
+					this.searchMessage = `No results found for ${value}`;
 				}
 			},
 			(err) => {
